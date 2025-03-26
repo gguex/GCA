@@ -3,8 +3,9 @@
 # ---------------------------------------------------
 
 import numpy as np
-from src.ca import correspondence_analysis
 import matplotlib.pyplot as plt
+from src.ca import correspondence_analysis
+from src.gca import contingency_with_sim
 
 # Create a contingency table
 n_r = 7
@@ -31,7 +32,9 @@ res = correspondence_analysis(cont_table)
 cont_table_gpd = Z_crisp.T @ cont_table
 res_gpd = correspondence_analysis(cont_table_gpd)
 
-# Perform the 
+# Perform the CA with similarity matrices
+cont_table_sim = contingency_with_sim(cont_table, S_r=S_crisp)
+res_sim = correspondence_analysis(cont_table_sim)
 
 # Plot the CA results
 fig, ax = plt.subplots()
@@ -52,4 +55,15 @@ for i in range(n_g):
 for j in range(n_c):
     ax.text(res_gpd['col_coord'][j, 0], res_gpd['col_coord'][j, 1], f'Col {j+1}')
 plt.show()
+
+# Plot the CA with similarity matrices results
+fig, ax = plt.subplots()
+ax.scatter(res_sim['row_coord'][:, 0], res_sim['row_coord'][:, 1], color='blue')
+ax.scatter(res_sim['col_coord'][:, 0], res_sim['col_coord'][:, 1], color='red')
+for i in range(n_r):
+    ax.text(res_sim['row_coord'][i, 0], res_sim['row_coord'][i, 1], f'Row {i+1}')
+for j in range(n_c):
+    ax.text(res_sim['col_coord'][j, 0], res_sim['col_coord'][j, 1], f'Col {j+1}')
+plt.show()
+
 
